@@ -1,0 +1,56 @@
+---
+- name: upgrade the packages to the latest versions
+  apt:
+    upgrade: dist
+    state: present
+    update_cache: yes
+    force_apt_get: yes
+    autoremove: yes
+    autoclean: yes
+
+- name: install necessary packages
+  apt:
+    name:
+      - curl
+      - openssh-server
+      - ca-certificates
+      - perl
+      - gnupg
+      - debian-archive-keyring
+      - apt-transport-https
+    update_cache: yes
+    force_apt_get: yes
+
+- name: add gitlab community edition gpg key
+  apt_key:
+    url: https://packages.gitlab.com/gitlab/gitlab-ee/gpgkey
+    state: present
+  environment:
+    http_proxy: "{{ proxy.http | default('') }}"
+    https_proxy: "{{ proxy.https | default(proxy.http) }}"
+
+- name: create gitlab community edition apt source list
+  file:
+    state: touch
+    path: /etc/apt/sources.list.d/gitlab-ce.list
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: add gitlab community edition apt source list entries
+  lineinfile:
+    line: "{{ item }}"
+    path: /etc/apt/sources.list.d/gitlab-ce.list
+    state: present
+  with_items:
+    - "deb https://packages.gitlab.com/gitlab/gitlab-ce/debian/ {{ ansible_distribution_release | lower }} main"
+    - "deb-src https://packages.gitlab.com/gitlab/gitlab-ce/debian/ {{ ansible_distribution_release | lower }} main"
+
+- name: install gitlab community edition
+  apt:
+    name: gitlab-ce
+    state: present
+    force_apt_get: yes
+    update_cache: yes
+  environment:
+    EXTERNAL_URL: "{{ gitlab_url }}"

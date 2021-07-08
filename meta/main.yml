@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  role_name: gitlab_ce
+  author: Hamid Yousefi
+  description: Gitlab Community Edition Service Installation
+  license: GPL-2.0-or-later
+  min_ansible_version: 2.8
+  platforms:
+    - name: Debian
+      versions:
+        - buster
+  galaxy_tags:
+    - linux
+    - git
+    - gitlab
