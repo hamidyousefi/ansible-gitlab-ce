@@ -18,6 +18,7 @@
       - gnupg
       - debian-archive-keyring
       - apt-transport-https
+      - tzdata
     update_cache: yes
     force_apt_get: yes
 
@@ -46,11 +47,13 @@
     - "deb https://packages.gitlab.com/gitlab/gitlab-ce/debian/ {{ ansible_distribution_release | lower }} main"
     - "deb-src https://packages.gitlab.com/gitlab/gitlab-ce/debian/ {{ ansible_distribution_release | lower }} main"
 
-- name: install gitlab community edition
-  apt:
-    name: gitlab-ce
-    state: present
-    force_apt_get: yes
-    update_cache: yes
-  environment:
-    EXTERNAL_URL: "{{ gitlab_url }}"
+# Reminder: Hamid Yousefi
+# This part is handled manually, but it has to be checked. There is a problem that's need to be checked.
+#- name: install gitlab community edition
+#  apt:
+#    name: gitlab-ce
+#    state: present
+#    force_apt_get: yes
+#    update_cache: yes
+#  environment:
+#    EXTERNAL_URL: "{{ gitlab_url }}"
